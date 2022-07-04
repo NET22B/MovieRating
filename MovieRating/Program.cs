@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MovieRating.Data;
 namespace MovieRating
 {
     public class Program
@@ -5,6 +8,8 @@ namespace MovieRating
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddDbContext<MovieRatingContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("MovieRatingContext") ?? throw new InvalidOperationException("Connection string 'MovieRatingContext' not found.")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
