@@ -14,7 +14,8 @@ namespace MovieRating.Data
         {
         }
 
-        public DbSet<Movie>? Movie { get; set; }
+        //public DbSet<Movie> Movie { get; set; } = null!;
+        public DbSet<Movie> Movie => Set<Movie>();
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

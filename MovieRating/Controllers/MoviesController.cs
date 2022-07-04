@@ -16,15 +16,17 @@ namespace MovieRating.Controllers
 
         public MoviesController(MovieRatingContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
             _context = context;
         }
 
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-              return _context.Movie != null ? 
-                          View(await _context.Movie.ToListAsync()) :
-                          Problem("Entity set 'MovieRatingContext.Movie'  is null.");
+            //return _context.Movie != null ? 
+            //            View(await _context.Movie.ToListAsync()) :
+            //            Problem("Entity set 'MovieRatingContext.Movie'  is null.");
+            return View(await _context.Movie.ToListAsync());
         }
 
         // GET: Movies/Details/5
