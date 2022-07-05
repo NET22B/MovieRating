@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MovieRating.Data;
+using MovieRating.Services;
+
 namespace MovieRating
 {
     public class Program
@@ -13,6 +15,12 @@ namespace MovieRating
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //builder.Services.AddSingleton  samma instans för alla
+            //builder.Services.AddScoped samma instans för hela requestet
+            //builder.Services.AddTransient ny instans varje gång nån vill ha den
+
+            builder.Services.AddScoped<IGenreSelectListService, GenreSelectListService>();
 
 
 

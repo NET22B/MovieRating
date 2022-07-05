@@ -55,6 +55,27 @@ namespace MovieRating.Controllers
             return View(nameof(Index2), model);
 
 
+        } 
+        
+        
+        public async Task<IActionResult> Filter3(IndexViewModel2 vM)
+        {
+            var movies = string.IsNullOrWhiteSpace(vM.Title) ?
+                                    _context.Movie :
+                                    _context.Movie.Where(m => m.Title!.StartsWith(vM.Title));
+
+            movies = vM.Genre == null ?
+                             movies :
+                             movies.Where(m => m.Genre == vM.Genre);
+
+            var model = new IndexViewModel2
+            {
+                Movies = await movies.ToListAsync(),
+            };
+
+            return View(nameof(Index3), model);
+
+
         }
 
         // GET: Movies
@@ -82,6 +103,16 @@ namespace MovieRating.Controllers
                                    Value = g.ToString()
                                })
                                .ToList()
+            };
+
+            return View(model);
+        } 
+        
+        public async Task<IActionResult> Index3()
+        {
+            var model = new IndexViewModel2
+            {
+                Movies = await _context.Movie.ToListAsync(),
             };
 
             return View(model);
