@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MovieRating.Data;
 using MovieRating.Models.Entities;
+using MovieRating.Models.ViewModels;
 
 namespace MovieRating.Controllers
 {
@@ -33,6 +34,27 @@ namespace MovieRating.Controllers
             return View(nameof(Index), await model.ToListAsync());
 
 
+        } 
+        
+        public async Task<IActionResult> Filter2(IndexViewModel vM)
+        {
+            var movies = string.IsNullOrWhiteSpace(vM.Title) ?
+                                    _context.Movie :
+                                    _context.Movie.Where(m => m.Title!.StartsWith(vM.Title));
+
+            movies = vM.Genre == null ?
+                             movies :
+                             movies.Where(m => m.Genre == vM.Genre);
+
+            var model = new IndexViewModel
+            {
+                Movies = await movies.ToListAsync(),
+                Genres = await GetGenresAsync()
+            };
+
+            return View(nameof(Index2), model);
+
+
         }
 
         // GET: Movies
@@ -42,6 +64,40 @@ namespace MovieRating.Controllers
             //            View(await _context.Movie.ToListAsync()) :
             //            Problem("Entity set 'MovieRatingContext.Movie'  is null.");
             return View(await _context.Movie.ToListAsync());
+        } 
+        
+        public async Task<IActionResult> Index2()
+        {
+
+            var movies = await _context.Movie.ToListAsync();
+
+            var model = new IndexViewModel
+            {
+                Movies = movies,
+                Genres = movies.Select(m => m.Genre)
+                               .Distinct()
+                               .Select(g => new SelectListItem
+                               {
+                                   Text = g.ToString(),
+                                   Value = g.ToString()
+                               })
+                               .ToList()
+            };
+
+            return View(model);
+        }
+
+        private async Task<IEnumerable<SelectListItem>> GetGenresAsync()
+        {
+            return await _context.Movie
+                                .Select(m => m.Genre)
+                                .Distinct()
+                                .Select(g => new SelectListItem
+                                {
+                                    Text = g.ToString(),
+                                    Value = g.ToString()
+                                })
+                                .ToListAsync();
         }
 
         // GET: Movies/Details/5
@@ -81,6 +137,8 @@ namespace MovieRating.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+
             return View(movie);
         }
 
