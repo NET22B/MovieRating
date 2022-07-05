@@ -20,6 +20,21 @@ namespace MovieRating.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> Filter(string title, int? genre)
+        {
+            var model = string.IsNullOrWhiteSpace(title) ?
+                                    _context.Movie :
+                                    _context.Movie.Where(m => m.Title!.StartsWith(title));
+
+            model = genre == null ?
+                             model :
+                             model.Where(m => (int)m.Genre == genre);
+
+            return View(nameof(Index), await model.ToListAsync());
+
+
+        }
+
         // GET: Movies
         public async Task<IActionResult> Index()
         {
