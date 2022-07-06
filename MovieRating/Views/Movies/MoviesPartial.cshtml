@@ -35,7 +35,9 @@
                 @*@Html.DisplayFor(modelItem => item.Rating)*@
                @* @await Component.InvokeAsync("Star", new { rating = item.Rating })*@
               
-               <vc:star rating="@item.Rating"></vc:star>
+              @* <vc:star rating="@item.Rating"></vc:star>*@
+              <star rating="@item.Rating"></star>
+
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
